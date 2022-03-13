@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PE10</title>
+</head>
+<body>
+<form>
+    <div style="margin: 20px; display: block;">
+        <label>First Name:</label><input id="firstName" /><br>
+    </div>
+    <div style="margin: 20px; display: block;">
+        <label>Last Name:</label><input id="lastName" /><br>
+    </div>
+    <div style="margin: 20px; display: block;">
+        <label>E-mail Address:</label><input id="email" /><br>
+    </div>
+    <div style="margin: 20px; display: block;">
+        <button type="button" id="btnsave" onclick="save()">Save</button>
+    </div>
+    <div style="margin: 20px; display: block;"><br>
+        <label>Select the file you just saved:</label><input type="file" id="path" /><br>
+    </div>
+    <div style="margin: 20px; display: block;"><br>
+        <button type="button" id="btnshow" onclick="show()">Show</button>
+    </div>
+    <div style="margin: 20px; display: block;"><br>
+        <p style="white-space: pre-line;" id="show"></p>
+    </div>
+</form>
+</body>
+<script>
+function save() {
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var email = document.getElementById("email").value;
+        const fileName = 'PE10.txt';
+        const str = "First Name: " + firstName + "\n" + "Last Name: " + lastName + "\n" + "E-mail Address: " + email + "\n";
+        const content = str
+        const blob = new Blob([content], {
+            type: 'application/text'
+        })
+        if ('download' in document.createElement('a')) {
+            const link = document.createElement('a')
+            link.download = fileName
+            link.style.display = 'none'
+            link.href = URL.createObjectURL(blob)
+            document.body.appendChild(link)
+            link.click() 
+            URL.revokeObjectURL(link.href) 
+            document.body.removeChild(link) 
+        } else {
+            navigator.msSaveBlob(blob, fileName)
+        }
+    }
+function show(){
+    let file = document.getElementById("path").files[0];
+    let reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = oFREvent => {
+            let text = oFREvent.target.result;
+            document.getElementById("show").innerHTML = text
+        };
+}
+</script>
+</html>
